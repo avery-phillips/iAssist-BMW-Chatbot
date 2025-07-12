@@ -311,16 +311,7 @@ with st.sidebar:
         st.rerun()
 
 # --- Main Content ---
-# Hero Section
-st.markdown(
-    """
-    <div class="hero-section">
-        <div class="logo-container">
-    """,
-    unsafe_allow_html=True
-)
-
-# BMW Logo
+# Simple Header with Logo
 try:
     col1, col2, col3 = st.columns([1, 1, 1])
     with col2:
@@ -330,19 +321,13 @@ except FileNotFoundError:
 
 st.markdown(
     """
-        </div>
-        <h1 class="hero-title">iAssist: Your BMW Expert,</h1>
-        <h2 class="hero-subtitle">Available 24/7</h2>
-        <p class="hero-description">
-            AI-powered assistant trained by BMW Genius expertise. Get instant 
-            answers to your BMW tech and maintenance questions.
-        </p>
-        <div class="action-buttons">
-            <button class="primary-btn" onclick="document.querySelector('.stChatInput input').focus()">
-                Try iAssist Now
-            </button>
-            <a href="#demo" class="secondary-btn">Watch Demo</a>
-        </div>
+    <div style="text-align: center; margin-bottom: 2rem;">
+        <h1 style="font-size: 2.5rem; font-weight: 700; color: #1a202c; margin-bottom: 0.5rem;">
+            iAssist: Your BMW Expert
+        </h1>
+        <h2 style="font-size: 1.5rem; font-weight: 600; color: #3182ce; margin-bottom: 1rem;">
+            Available 24/7
+        </h2>
     </div>
     """,
     unsafe_allow_html=True
