@@ -231,6 +231,22 @@ color: #000000 !important;
 color: #000000 !important;
 }
 
+/* Force all text in assistant messages to be black */
+[data-testid="chat-message-assistant"] div,
+[data-testid="chat-message-assistant"] span,
+[data-testid="chat-message-assistant"] p,
+[data-testid="chat-message-assistant"] li,
+[data-testid="chat-message-assistant"] strong,
+[data-testid="chat-message-assistant"] em,
+[data-testid="chat-message-assistant"] code {
+color: #000000 !important;
+}
+
+/* Target the content wrapper specifically */
+[data-testid="chat-message-assistant"] > div > div {
+color: #000000 !important;
+}
+
 /* Chat Input */
 .stChatInput {
 border-radius: 25px;
