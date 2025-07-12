@@ -267,6 +267,26 @@ st.markdown(
         backdrop-filter: blur(10px);
     }
     
+    /* Target the bottom fixed container */
+    .stApp > div:last-child > div > div:last-child {
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%) !important;
+    }
+    
+    /* Target chat input parent containers */
+    [data-testid="stChatInput"] > div {
+        background: transparent !important;
+    }
+    
+    /* Remove any remaining black backgrounds */
+    .stBottom {
+        background: transparent !important;
+    }
+    
+    /* Main chat input wrapper */
+    .stChatInputContainer {
+        background: transparent !important;
+    }
+    
     /* Sidebar Styling */
     .css-1d391kg, section[data-testid="stSidebar"] {
         background: linear-gradient(180deg, #2d3748 0%, #1a202c 100%);
