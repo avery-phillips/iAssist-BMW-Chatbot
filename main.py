@@ -83,64 +83,86 @@ st.markdown("Ask me anything about BMW vehicles from our official FAQs!")
 st.markdown(
     """
     <style>
-    /* Main app background */
+    /* Override Streamlit's default dark theme */
+    .stApp {
+        background-color: white !important;
+    }
+    
+    /* Main content area */
     .main .block-container {
-        background-color: white;
-        color: #2c3e50; /* Dark blue-gray for main text */
+        background-color: white !important;
+        color: #2c3e50 !important;
     }
     
     /* Sidebar styling */
-    .css-1d391kg {
-        background-color: #f8f9fa; /* Light gray for sidebar */
+    .css-1d391kg, .css-1lcbmhc, .css-1cypcdb, section[data-testid="stSidebar"] {
+        background-color: #f8f9fa !important;
+        color: #2c3e50 !important;
+    }
+    
+    /* Sidebar text */
+    .css-1d391kg .stMarkdown, .css-1lcbmhc .stMarkdown, section[data-testid="stSidebar"] .stMarkdown {
+        color: #2c3e50 !important;
     }
     
     /* Chat messages styling */
     .stChatMessage {
-        background-color: white;
-        color: #2c3e50;
+        background-color: white !important;
+        color: #2c3e50 !important;
     }
     
     /* User message styling */
     [data-testid="chat-message-user"] {
-        background-color: #e8f4fd; /* Light blue background */
-        color: #1e3a8a; /* Dark blue text */
+        background-color: #e8f4fd !important;
+        color: #1e3a8a !important;
     }
     
     /* Assistant message styling */
     [data-testid="chat-message-assistant"] {
-        background-color: #f1f5f9; /* Light gray background */
-        color: #334155; /* Slate gray text */
+        background-color: #f1f5f9 !important;
+        color: #334155 !important;
     }
     
     /* Headers styling */
     h1, h2, h3 {
-        color: #1e40af; /* BMW-like blue for headers */
+        color: #1e40af !important;
+    }
+    
+    /* All text elements */
+    .stMarkdown, .stText, p, div {
+        color: #2c3e50 !important;
     }
     
     /* Instruction text styling */
     .instruction-text {
-        color: #4f46e5; /* Indigo for instruction text */
+        color: #4f46e5 !important;
         font-size: 1.05em;
         margin-bottom: 20px;
     }
     
     /* Button styling */
     .stButton > button {
-        background-color: #1e40af;
-        color: white;
-        border: none;
+        background-color: #1e40af !important;
+        color: white !important;
+        border: none !important;
     }
     
     /* Input field styling */
-    .stTextInput > div > div > input {
-        background-color: white;
-        color: #2c3e50;
-        border: 2px solid #e2e8f0;
+    .stTextInput > div > div > input, .stChatInput > div > div > input {
+        background-color: white !important;
+        color: #2c3e50 !important;
+        border: 2px solid #e2e8f0 !important;
     }
     
-    /* Make sure all text is readable on white background */
-    .stMarkdown, .stText {
-        color: #2c3e50;
+    /* Chat input container */
+    .stChatInput {
+        background-color: white !important;
+    }
+    
+    /* Override any remaining dark elements */
+    .css-1v0mbdj, .css-12oz5g7, .css-184tjsw {
+        background-color: white !important;
+        color: #2c3e50 !important;
     }
     </style>
     <p class="instruction-text">Type your question below about BMW features, services, or common issues, and I'll do my best to provide an answer from my knowledge base.</p>
