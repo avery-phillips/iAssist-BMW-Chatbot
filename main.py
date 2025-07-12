@@ -57,7 +57,7 @@ st.markdown(
 <style>
 /* Global App Styling */
 .stApp {
-background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
 font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
@@ -270,7 +270,7 @@ background: white !important;
 
 /* Bottom chat area background */
 .stApp > div:last-child {
-background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%) !important;
+background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%) !important;
 }
 
 /* Chat input sticky footer */
@@ -281,7 +281,7 @@ backdrop-filter: blur(10px);
 
 /* Target the bottom fixed container */
 .stApp > div:last-child > div > div:last-child {
-background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%) !important;
+background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%) !important;
 }
 
 /* Target chat input parent containers */
