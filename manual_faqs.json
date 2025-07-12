@@ -1,0 +1,42 @@
+[
+    {
+        "question": "What electric vehicle models does BMW offer?",
+        "answer": "BMW offers a growing range of fully electric vehicles, including the iX SUV, i4 Gran Coupe, i5 Sedan, and the i7 Sedan. These models combine BMW's signature driving dynamics with zero-emission mobility."
+    },
+    {
+        "question": "How can I check the battery range of my BMW EV?",
+        "answer": "You can check your BMW EV's battery range directly on the iDrive display, through the My BMW App on your smartphone, or by using the digital instrument cluster. It provides real-time estimates based on driving style and conditions."
+    },
+    {
+        "question": "What is the BMW iDrive system?",
+        "answer": "The BMW iDrive system is an infotainment and control system that allows drivers to manage various vehicle functions, navigation, communication, and entertainment using a central controller, touchscreen, or voice commands."
+    },
+    {
+        "question": "How do I update my BMW's navigation maps?",
+        "answer": "Navigation map updates for your BMW can typically be downloaded via USB or, for newer models, over-the-air (OTA) automatically. You can check for available updates through your iDrive system's navigation menu."
+    },
+    {
+        "question": "What maintenance is required for a BMW electric vehicle?",
+        "answer": "BMW electric vehicles generally require less maintenance than gasoline cars, as there are no oil changes, spark plug replacements, or fuel filter changes needed. Routine checks typically focus on tires, brakes, cabin air filters, and general system diagnostics."
+    },
+    {
+        "question": "Does BMW offer autonomous driving features?",
+        "answer": "BMW offers advanced driver-assistance systems (ADAS) that provide features like lane keeping assist, adaptive cruise control, and parking assistance. These systems are designed to support the driver and enhance safety, moving towards higher levels of automated driving capabilities."
+    },
+    {
+        "question": "What is the BMW ConnectedDrive service?",
+        "answer": "BMW ConnectedDrive is a suite of digital services and apps that connect your BMW with your digital life. Features include remote services (e.g., locking/unlocking doors), concierge services, real-time traffic information, and emergency call functions."
+    },
+    {
+        "question": "How do I pair my smartphone with BMW Bluetooth?",
+        "answer": "To pair your smartphone, go to the 'Communication' or 'Media' menu in your iDrive system, select 'Manage mobile devices,' and then 'Add new device.' Follow the on-screen prompts to connect your phone via Bluetooth."
+    },
+    {
+        "question": "Can I pre-condition my BMW's cabin remotely?",
+        "answer": "Yes, many BMW models, especially electric and plug-in hybrid variants, allow you to pre-condition the cabin temperature remotely using the My BMW App. This feature heats or cools the interior before you enter the vehicle."
+    },
+    {
+        "question": "What is the warranty on a new BMW vehicle?",
+        "answer": "New BMW vehicles typically come with a 4-year/50,000-mile (whichever comes first) New Vehicle Limited Warranty. Specific components like batteries in EVs may have longer separate warranties. Always consult your official BMW warranty booklet for details."
+    }
+]
