@@ -211,7 +211,7 @@ color: white;
 /* Assistant messages */
 [data-testid="chat-message-assistant"] {
 background: #f7fafc;
-color: #2d3748;
+color: #000000;
 margin-left: 0;
 margin-right: auto;
 border: 1px solid #e2e8f0;
@@ -220,7 +220,7 @@ box-shadow: 0 3px 10px rgba(0,0,0,0.1);
 }
 
 [data-testid="chat-message-assistant"] .stMarkdown {
-color: #2d3748;
+color: #000000;
 }
 
 /* Chat Input */
