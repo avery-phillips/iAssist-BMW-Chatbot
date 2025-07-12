@@ -372,15 +372,12 @@ except FileNotFoundError:
 
 st.markdown(
     """
-<div style="text-align: center; margin-bottom: 2rem;">
-<h1 style="font-size: 2.5rem; font-weight: 700; color: #1a202c; margin-bottom: 0.5rem;">
-iAssist: Your BMW Expert
-</h1>
-<h2 style="font-size: 1.5rem; font-weight: 600; color: #3182ce; margin-bottom: 1rem;">
-Available 24/7
-</h2>
-</div>
-""",
+    <div style="text-align: center; margin-bottom: 2rem;">
+        <h1 style="font-size: 2.5rem; font-weight: 700; color: #1a202c; margin-bottom: 0.5rem;">
+            iAssist: Your BMW Expert
+        </h1>
+    </div>
+    """,
     unsafe_allow_html=True
 )
 
