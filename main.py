@@ -230,6 +230,7 @@ st.markdown(
         border-radius: 25px;
         border: 2px solid #e2e8f0;
         box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        background: white !important;
     }
     
     .stChatInput > div > div > input {
@@ -237,8 +238,17 @@ st.markdown(
         border: none;
         padding: 15px 20px;
         font-size: 1rem;
-        background: white;
-        color: #2d3748;
+        background: white !important;
+        color: #2d3748 !important;
+    }
+    
+    .stChatInput > div {
+        background: white !important;
+    }
+    
+    .stChatInput textarea {
+        background: white !important;
+        color: #2d3748 !important;
     }
     
     /* Sidebar Styling */
@@ -313,9 +323,16 @@ with st.sidebar:
 # --- Main Content ---
 # Simple Header with Logo
 try:
-    col1, col2, col3 = st.columns([1, 1, 1])
-    with col2:
-        st.image("bmw_logo.png", width=120)
+    st.markdown(
+        """
+        <div style="display: flex; justify-content: center; margin-bottom: 1rem;">
+            <img src="data:image/png;base64,{}" width="120">
+        </div>
+        """.format(
+            __import__('base64').b64encode(open("bmw_logo.png", "rb").read()).decode()
+        ),
+        unsafe_allow_html=True
+    )
 except FileNotFoundError:
     st.warning("BMW logo not found. Please upload 'bmw_logo.png' for complete branding.")
 
