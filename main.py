@@ -251,6 +251,22 @@ st.markdown(
         color: #2d3748 !important;
     }
     
+    /* Chat input container area */
+    [data-testid="stChatInput"] {
+        background: white !important;
+    }
+    
+    /* Bottom chat area background */
+    .stApp > div:last-child {
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%) !important;
+    }
+    
+    /* Chat input sticky footer */
+    .stChatInput {
+        background: rgba(255, 255, 255, 0.95) !important;
+        backdrop-filter: blur(10px);
+    }
+    
     /* Sidebar Styling */
     .css-1d391kg, section[data-testid="stSidebar"] {
         background: linear-gradient(180deg, #2d3748 0%, #1a202c 100%);
