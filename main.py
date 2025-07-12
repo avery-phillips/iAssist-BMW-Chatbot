@@ -350,18 +350,6 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-# Chat Interface
-st.markdown(
-    """
-    <div class="chat-container">
-        <div class="chat-header">
-            <h3 class="chat-title">Start Your Conversation</h3>
-            <p class="chat-subtitle">Ask me anything about BMW vehicles, features, or maintenance</p>
-        </div>
-    """,
-    unsafe_allow_html=True
-)
-
 # Initialize chat history
 if "messages" not in st.session_state:
     st.session_state.messages = []
@@ -406,9 +394,7 @@ if prompt := st.chat_input("Ask about BMW features, maintenance, or troubleshoot
                 st.session_state.messages.append({"role": "assistant", "content": f"Error: {e}"})
             except Exception as e:
                 st.error(f"An unexpected error occurred: {e}")
-                st.session_state.messages.append({"role": "assistant", "content": f"Error: {e}"})
-
-st.markdown("</div>", unsafe_allow_html=True)
+                st.session_state.messages.append({"role": "assistant", "content": f"Error: {e}"}))
 
 # Footer
 st.markdown(
