@@ -79,14 +79,68 @@ except FileNotFoundError:
 st.title("BMW FAQ AI Assistant 🚗")
 st.markdown("Ask me anything about BMW vehicles from our official FAQs!")
 
-# Add some initial instructions with simple styling
+# Add custom styling for white background and complementary colors
 st.markdown(
     """
     <style>
+    /* Main app background */
+    .main .block-container {
+        background-color: white;
+        color: #2c3e50; /* Dark blue-gray for main text */
+    }
+    
+    /* Sidebar styling */
+    .css-1d391kg {
+        background-color: #f8f9fa; /* Light gray for sidebar */
+    }
+    
+    /* Chat messages styling */
+    .stChatMessage {
+        background-color: white;
+        color: #2c3e50;
+    }
+    
+    /* User message styling */
+    [data-testid="chat-message-user"] {
+        background-color: #e8f4fd; /* Light blue background */
+        color: #1e3a8a; /* Dark blue text */
+    }
+    
+    /* Assistant message styling */
+    [data-testid="chat-message-assistant"] {
+        background-color: #f1f5f9; /* Light gray background */
+        color: #334155; /* Slate gray text */
+    }
+    
+    /* Headers styling */
+    h1, h2, h3 {
+        color: #1e40af; /* BMW-like blue for headers */
+    }
+    
+    /* Instruction text styling */
     .instruction-text {
-        color: #ADD8E6; /* Light Blue */
+        color: #4f46e5; /* Indigo for instruction text */
         font-size: 1.05em;
         margin-bottom: 20px;
+    }
+    
+    /* Button styling */
+    .stButton > button {
+        background-color: #1e40af;
+        color: white;
+        border: none;
+    }
+    
+    /* Input field styling */
+    .stTextInput > div > div > input {
+        background-color: white;
+        color: #2c3e50;
+        border: 2px solid #e2e8f0;
+    }
+    
+    /* Make sure all text is readable on white background */
+    .stMarkdown, .stText {
+        color: #2c3e50;
     }
     </style>
     <p class="instruction-text">Type your question below about BMW features, services, or common issues, and I'll do my best to provide an answer from my knowledge base.</p>
