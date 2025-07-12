@@ -1,145 +1,146 @@
-        import streamlit as st
-        import openai
-        import json
-        import os
 
-        # --- 1. Configuration & API Key Loading ---
-        # Load the OpenAI API key from Replit Secrets (environment variables)
-        # The key name OPENAI_API_KEY is what we set in Replit Secrets
-        OPENAI_API_KEY = os.environ.get('OPENAI_API_KEY')
+import streamlit as st
+import openai
+import json
+import os
 
-        if not OPENAI_API_KEY:
-            st.error("Error: OPENAI_API_KEY not found in Replit Secrets. Please add it.")
-            st.stop() # Stop the Streamlit app if API key is missing
+# --- 1. Configuration & API Key Loading ---
+# Load the OpenAI API key from Replit Secrets (environment variables)
+# The key name OPENAI_API_KEY is what we set in Replit Secrets
+OPENAI_API_KEY = os.environ.get('OPENAI_API_KEY')
 
-        # Configure the OpenAI library with your API key
-        openai.api_key = OPENAI_API_KEY
+if not OPENAI_API_KEY:
+    st.error("Error: OPENAI_API_KEY not found in Replit Secrets. Please add it.")
+    st.stop() # Stop the Streamlit app if API key is missing
 
-        # --- 2. Load iAssist's Knowledge Base from JSON File ---
-        # Make sure your JSON file is uploaded to the root of your Replit project
-        FAQ_FILE = "manual_faqs.json" # <--- IMPORTANT: Ensure this matches your uploaded file name!
+# Configure the OpenAI library with your API key
+openai.api_key = OPENAI_API_KEY
 
-        try:
-            with open(FAQ_FILE, 'r', encoding='utf-8') as f:
-                faqs_data = json.load(f)
-        except FileNotFoundError:
-            st.error(f"Error: '{FAQ_FILE}' not found. Please upload your FAQ JSON file to Replit.")
-            st.stop()
-        except json.JSONDecodeError:
-            st.error(f"Error: Could not decode JSON from '{FAQ_FILE}'. Please check its format (e.g., syntax errors).")
-            st.stop()
+# --- 2. Load iAssist's Knowledge Base from JSON File ---
+# Make sure your JSON file is uploaded to the root of your Replit project
+FAQ_FILE = "manual_faqs.json" # <--- IMPORTANT: Ensure this matches your uploaded file name!
 
-        # Format FAQs into a single string to include in the system prompt context
-        # This assumes your JSON is a list of objects like: [{"question": "...", "answer": "..."}, ...]
-        faq_context = ""
-        for item in faqs_data:
-            if "question" in item and "answer" in item:
-                faq_context += f"Q: {item['question']}\nA: {item['answer']}\n\n"
-            # You can add more logic here if your JSON has different structures or fields
-            # Example: if 'topic' in item: faq_context += f"Topic: {item['topic']}\n"
+try:
+    with open(FAQ_FILE, 'r', encoding='utf-8') as f:
+        faqs_data = json.load(f)
+except FileNotFoundError:
+    st.error(f"Error: '{FAQ_FILE}' not found. Please upload your FAQ JSON file to Replit.")
+    st.stop()
+except json.JSONDecodeError:
+    st.error(f"Error: Could not decode JSON from '{FAQ_FILE}'. Please check its format (e.g., syntax errors).")
+    st.stop()
 
-        # --- 3. iAssist System Prompt Template ---
-        # This is adapted from your previous prompt, designed for OpenAI's chat completions.
-        system_prompt_template = """
-        You are iAssist, an expert BMW product specialist and virtual Genius. Your core function is to provide clear, concise, and accurate information about BMW features and services. You are equipped with a specialized knowledge base on iDrive 8, Parking Assistant Professional, BMW ConnectedDrive services, electric vehicle charging for BMW iX, Head-up Display, and frequently asked questions from BMW service advisors.
+# Format FAQs into a single string to include in the system prompt context
+# This assumes your JSON is a list of objects like: [{"question": "...", "answer": "..."}, ...]
+faq_context = ""
+for item in faqs_data:
+    if "question" in item and "answer" in item:
+        faq_context += f"Q: {item['question']}\nA: {item['answer']}\n\n"
+    # You can add more logic here if your JSON has different structures or fields
+    # Example: if 'topic' in item: faq_context += f"Topic: {item['topic']}\n"
 
-        ---
-        **Relevant Context from BMW Knowledge Base:**
-        {context}
-        ---
+# --- 3. iAssist System Prompt Template ---
+# This is adapted from your previous prompt, designed for OpenAI's chat completions.
+system_prompt_template = """
+You are iAssist, an expert BMW product specialist and virtual Genius. Your core function is to provide clear, concise, and accurate information about BMW features and services. You are equipped with a specialized knowledge base on iDrive 8, Parking Assistant Professional, BMW ConnectedDrive services, electric vehicle charging for BMW iX, Head-up Display, and frequently asked questions from BMW service advisors.
 
-        When a user asks a question, first determine if the question relates to your pre-defined topics or provided context. If relevant information is supplied, use that information to formulate your answer. If a question is outside your knowledge scope or no relevant information is found, politely state that you can only provide information on the features you are familiar with. Prioritize providing solutions to common issues and clear explanations of features. Keep your answers factual and directly answer the user's query.
-        """
+---
+**Relevant Context from BMW Knowledge Base:**
+{context}
+---
 
-        # --- 4. Streamlit Application Interface ---
-        st.set_page_config(page_title="BMW FAQ AI Assistant", page_icon="🚗")
+When a user asks a question, first determine if the question relates to your pre-defined topics or provided context. If relevant information is supplied, use that information to formulate your answer. If a question is outside your knowledge scope or no relevant information is found, politely state that you can only provide information on the features you are familiar with. Prioritize providing solutions to common issues and clear explanations of features. Keep your answers factual and directly answer the user's query.
+"""
 
-        # --- Add a sidebar for information or controls ---
-        with st.sidebar:
-            st.header("About This Assistant")
-            st.write("This AI Assistant is designed to answer your questions about BMW vehicles, drawing information from a specialized set of FAQs. It's powered by OpenAI's ChatGPT-4o model.")
-            st.write("Feel free to ask questions about BMW features, services, or common troubleshooting tips found in the FAQs.")
-            st.markdown("---")
-            st.write("Created by Avery Phillips")
+# --- 4. Streamlit Application Interface ---
+st.set_page_config(page_title="BMW FAQ AI Assistant", page_icon="🚗")
 
-            # --- Add a "Clear Chat" Button ---
-            if st.button("Clear Chat History"):
-                st.session_state.messages = []
-                st.rerun() # Rerun the app to clear the display
+# --- Add a sidebar for information or controls ---
+with st.sidebar:
+    st.header("About This Assistant")
+    st.write("This AI Assistant is designed to answer your questions about BMW vehicles, drawing information from a specialized set of FAQs. It's powered by OpenAI's ChatGPT-4o model.")
+    st.write("Feel free to ask questions about BMW features, services, or common troubleshooting tips found in the FAQs.")
+    st.markdown("---")
+    st.write("Created by Avery Phillips")
 
-        # Optional: Add a logo at the top of the main page
-        # Make sure you upload 'bmw_logo.png' to your Replit project if you use this
-        try:
-            st.image("bmw_logo.png", width=100) # <--- THIS LINE IS NOW UNCOMMENTED
-        except FileNotFoundError:
-            st.warning("BMW logo image not found. Please upload 'bmw_logo.png' to the root directory of your Replit project.")
+    # --- Add a "Clear Chat" Button ---
+    if st.button("Clear Chat History"):
+        st.session_state.messages = []
+        st.rerun() # Rerun the app to clear the display
 
-
-        st.title("BMW FAQ AI Assistant 🚗")
-        st.markdown("Ask me anything about BMW vehicles from our official FAQs!")
-
-        # Add some initial instructions with simple styling
-        st.markdown(
-            """
-            <style>
-            .instruction-text {
-                color: #ADD8E6; /* Light Blue */
-                font-size: 1.05em;
-                margin-bottom: 20px;
-            }
-            </style>
-            <p class="instruction-text">Type your question below about BMW features, services, or common issues, and I'll do my best to provide an answer from my knowledge base.</p>
-            """,
-            unsafe_allow_html=True
-        )
+# Optional: Add a logo at the top of the main page
+# Make sure you upload 'bmw_logo.png' to your Replit project if you use this
+try:
+    st.image("bmw_logo.png", width=100) # <--- THIS LINE IS NOW UNCOMMENTED
+except FileNotFoundError:
+    st.warning("BMW logo image not found. Please upload 'bmw_logo.png' to the root directory of your Replit project.")
 
 
-        # Initialize chat history in session state if it doesn't exist
-        if "messages" not in st.session_state:
-            st.session_state.messages = []
+st.title("BMW FAQ AI Assistant 🚗")
+st.markdown("Ask me anything about BMW vehicles from our official FAQs!")
 
-        # Display chat messages from history on app rerun
-        for message in st.session_state.messages:
-            with st.chat_message(message["role"]):
-                st.markdown(message["content"])
+# Add some initial instructions with simple styling
+st.markdown(
+    """
+    <style>
+    .instruction-text {
+        color: #ADD8E6; /* Light Blue */
+        font-size: 1.05em;
+        margin-bottom: 20px;
+    }
+    </style>
+    <p class="instruction-text">Type your question below about BMW features, services, or common issues, and I'll do my best to provide an answer from my knowledge base.</p>
+    """,
+    unsafe_allow_html=True
+)
 
-        # Accept user input via chat_input
-        if prompt := st.chat_input("Ask a question about BMW..."):
-            # Add user message to chat history
-            st.session_state.messages.append({"role": "user", "content": prompt})
-            # Display user message in chat message container
-            with st.chat_message("user"):
-                st.markdown(prompt)
 
-            # Get AI response
-            with st.chat_message("assistant"):
-                with st.spinner("Thinking..."):
-                    try:
-                        # Prepare the messages for the OpenAI API call
-                        # Include the system prompt first, then the full chat history for context
-                        messages_for_api = [
-                            {"role": "system", "content": system_prompt_template.format(context=faq_context)}
-                        ] + st.session_state.messages # Append previous chat turns for context
+# Initialize chat history in session state if it doesn't exist
+if "messages" not in st.session_state:
+    st.session_state.messages = []
 
-                        response = openai.chat.completions.create(
-                            model="gpt-4o",  # Recommended for latest model access. Or "gpt-4", "gpt-3.5-turbo" if preferred.
-                            messages=messages_for_api, # Use the full message history
-                            max_tokens=500,  # Limit response length
-                            temperature=0.2  # Lower temperature for more factual/less creative responses
-                        )
-                        ai_response = response.choices[0].message.content
-                        st.markdown(ai_response) # Use st.markdown for AI's response
+# Display chat messages from history on app rerun
+for message in st.session_state.messages:
+    with st.chat_message(message["role"]):
+        st.markdown(message["content"])
 
-                        # Add assistant response to chat history
-                        st.session_state.messages.append({"role": "assistant", "content": ai_response})
+# Accept user input via chat_input
+if prompt := st.chat_input("Ask a question about BMW..."):
+    # Add user message to chat history
+    st.session_state.messages.append({"role": "user", "content": prompt})
+    # Display user message in chat message container
+    with st.chat_message("user"):
+        st.markdown(prompt)
 
-                    except openai.APIError as e:
-                        st.error(f"An OpenAI API error occurred: {e}. Please check your API key, model access, or network.")
-                        st.session_state.messages.append({"role": "assistant", "content": f"Error: {e}"}) # Add error to history
-                    except Exception as e:
-                        st.error(f"An unexpected error occurred: {e}")
-                        st.session_state.messages.append({"role": "assistant", "content": f"Error: {e}"}) # Add error to history
+    # Get AI response
+    with st.chat_message("assistant"):
+        with st.spinner("Thinking..."):
+            try:
+                # Prepare the messages for the OpenAI API call
+                # Include the system prompt first, then the full chat history for context
+                messages_for_api = [
+                    {"role": "system", "content": system_prompt_template.format(context=faq_context)}
+                ] + st.session_state.messages # Append previous chat turns for context
 
-        # --- Optional: Display Raw FAQs for debugging/reference ---
-        # with st.expander("View Loaded FAQs"):
-        #     st.json(faqs_data)
+                response = openai.chat.completions.create(
+                    model="gpt-4o",  # Recommended for latest model access. Or "gpt-4", "gpt-3.5-turbo" if preferred.
+                    messages=messages_for_api, # Use the full message history
+                    max_tokens=500,  # Limit response length
+                    temperature=0.2  # Lower temperature for more factual/less creative responses
+                )
+                ai_response = response.choices[0].message.content
+                st.markdown(ai_response) # Use st.markdown for AI's response
+
+                # Add assistant response to chat history
+                st.session_state.messages.append({"role": "assistant", "content": ai_response})
+
+            except openai.APIError as e:
+                st.error(f"An OpenAI API error occurred: {e}. Please check your API key, model access, or network.")
+                st.session_state.messages.append({"role": "assistant", "content": f"Error: {e}"}) # Add error to history
+            except Exception as e:
+                st.error(f"An unexpected error occurred: {e}")
+                st.session_state.messages.append({"role": "assistant", "content": f"Error: {e}"}) # Add error to history
+
+# --- Optional: Display Raw FAQs for debugging/reference ---
+# with st.expander("View Loaded FAQs"):
+#     st.json(faqs_data)
