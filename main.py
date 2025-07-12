@@ -394,7 +394,7 @@ if prompt := st.chat_input("Ask about BMW features, maintenance, or troubleshoot
                 st.session_state.messages.append({"role": "assistant", "content": f"Error: {e}"})
             except Exception as e:
                 st.error(f"An unexpected error occurred: {e}")
-                st.session_state.messages.append({"role": "assistant", "content": f"Error: {e}"}))
+                st.session_state.messages.append({"role": "assistant", "content": f"Error: {e}"})
 
 # Footer
 st.markdown(
