@@ -1,24 +1,21 @@
 
+
 import streamlit as st
 import openai
 import json
 import os
 
 # --- 1. Configuration & API Key Loading ---
-# Load the OpenAI API key from Replit Secrets (environment variables)
-# The key name OPENAI_API_KEY is what we set in Replit Secrets
 OPENAI_API_KEY = os.environ.get('OPENAI_API_KEY')
 
 if not OPENAI_API_KEY:
     st.error("Error: OPENAI_API_KEY not found in Replit Secrets. Please add it.")
-    st.stop() # Stop the Streamlit app if API key is missing
+    st.stop()
 
-# Configure the OpenAI library with your API key
 openai.api_key = OPENAI_API_KEY
 
 # --- 2. Load iAssist's Knowledge Base from JSON File ---
-# Make sure your JSON file is uploaded to the root of your Replit project
-FAQ_FILE = "manual_faqs.json" # <--- IMPORTANT: Ensure this matches your uploaded file name!
+FAQ_FILE = "manual_faqs.json"
 
 try:
     with open(FAQ_FILE, 'r', encoding='utf-8') as f:
@@ -31,16 +28,12 @@ except json.JSONDecodeError:
     st.stop()
 
 # Format FAQs into a single string to include in the system prompt context
-# This assumes your JSON is a list of objects like: [{"question": "...", "answer": "..."}, ...]
 faq_context = ""
 for item in faqs_data:
     if "question" in item and "answer" in item:
         faq_context += f"Q: {item['question']}\nA: {item['answer']}\n\n"
-    # You can add more logic here if your JSON has different structures or fields
-    # Example: if 'topic' in item: faq_context += f"Topic: {item['topic']}\n"
 
 # --- 3. iAssist System Prompt Template ---
-# This is adapted from your previous prompt, designed for OpenAI's chat completions.
 system_prompt_template = """
 You are iAssist, an expert BMW product specialist and virtual Genius. Your core function is to provide clear, concise, and accurate information about BMW features and services. You are equipped with a specialized knowledge base on iDrive 8, Parking Assistant Professional, BMW ConnectedDrive services, electric vehicle charging for BMW iX, Head-up Display, and frequently asked questions from BMW service advisors.
 
@@ -53,170 +46,377 @@ When a user asks a question, first determine if the question relates to your pre
 """
 
 # --- 4. Streamlit Application Interface ---
-st.set_page_config(page_title="BMW FAQ AI Assistant", page_icon="🚗")
+st.set_page_config(
+    page_title="iAssist - BMW Expert Assistant", 
+    page_icon="🚗",
+    layout="wide",
+    initial_sidebar_state="expanded"
+)
 
-# --- Add a sidebar for information or controls ---
-with st.sidebar:
-    st.header("About This Assistant")
-    st.write("This AI Assistant is designed to answer your questions about BMW vehicles, drawing information from a specialized set of FAQs. It's powered by OpenAI's ChatGPT-4o model.")
-    st.write("Feel free to ask questions about BMW features, services, or common troubleshooting tips found in the FAQs.")
-    st.markdown("---")
-    st.write("Created by Avery Phillips")
-
-    # --- Add a "Clear Chat" Button ---
-    if st.button("Clear Chat History"):
-        st.session_state.messages = []
-        st.rerun() # Rerun the app to clear the display
-
-# Optional: Add a logo at the top of the main page
-# Make sure you upload 'bmw_logo.png' to your Replit project if you use this
-try:
-    st.image("bmw_logo.png", width=100) # <--- THIS LINE IS NOW UNCOMMENTED
-except FileNotFoundError:
-    st.warning("BMW logo image not found. Please upload 'bmw_logo.png' to the root directory of your Replit project.")
-
-
-st.title("BMW FAQ AI Assistant 🚗")
-st.markdown("Ask me anything about BMW vehicles from our official FAQs!")
-
-# Add custom styling for white background and complementary colors
+# --- Custom CSS for Professional Branded Design ---
 st.markdown(
     """
     <style>
-    /* Override Streamlit's default dark theme */
+    /* Global App Styling */
     .stApp {
-        background-color: white !important;
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
     
-    /* Main content area */
+    /* Hide Streamlit branding */
+    #MainMenu {visibility: hidden;}
+    footer {visibility: hidden;}
+    header {visibility: hidden;}
+    
+    /* Main container */
     .main .block-container {
-        background-color: white !important;
-        color: #2c3e50 !important;
+        padding-top: 2rem;
+        padding-bottom: 2rem;
+        max-width: 1200px;
     }
     
-    /* Sidebar styling */
-    .css-1d391kg, .css-1lcbmhc, .css-1cypcdb, section[data-testid="stSidebar"] {
-        background-color: #f8f9fa !important;
-        color: #2c3e50 !important;
+    /* Hero Section Styling */
+    .hero-section {
+        text-align: center;
+        padding: 3rem 2rem;
+        background: white;
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        margin-bottom: 2rem;
+        border: 1px solid #e1e8ed;
     }
     
-    /* Sidebar text */
-    .css-1d391kg .stMarkdown, .css-1lcbmhc .stMarkdown, section[data-testid="stSidebar"] .stMarkdown {
-        color: #2c3e50 !important;
+    .hero-title {
+        font-size: 3.5rem;
+        font-weight: 700;
+        color: #1a202c;
+        margin-bottom: 0.5rem;
+        line-height: 1.2;
     }
     
-    /* Chat messages styling */
+    .hero-subtitle {
+        font-size: 2.8rem;
+        font-weight: 600;
+        color: #3182ce;
+        margin-bottom: 1.5rem;
+    }
+    
+    .hero-description {
+        font-size: 1.3rem;
+        color: #4a5568;
+        max-width: 600px;
+        margin: 0 auto 2rem auto;
+        line-height: 1.6;
+    }
+    
+    /* Action Buttons */
+    .action-buttons {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        flex-wrap: wrap;
+        margin-bottom: 2rem;
+    }
+    
+    .primary-btn {
+        background: linear-gradient(135deg, #3182ce 0%, #2c5aa0 100%);
+        color: white;
+        padding: 15px 35px;
+        border: none;
+        border-radius: 25px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        cursor: pointer;
+        text-decoration: none;
+        display: inline-block;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(49, 130, 206, 0.4);
+    }
+    
+    .primary-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(49, 130, 206, 0.6);
+    }
+    
+    .secondary-btn {
+        background: transparent;
+        color: #3182ce;
+        padding: 15px 35px;
+        border: 2px solid #3182ce;
+        border-radius: 25px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        cursor: pointer;
+        text-decoration: none;
+        display: inline-block;
+        transition: all 0.3s ease;
+    }
+    
+    .secondary-btn:hover {
+        background: #3182ce;
+        color: white;
+        transform: translateY(-2px);
+    }
+    
+    /* Chat Container */
+    .chat-container {
+        background: white;
+        border-radius: 20px;
+        padding: 2rem;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        border: 1px solid #e1e8ed;
+        margin: 2rem auto;
+        max-width: 800px;
+    }
+    
+    .chat-header {
+        text-align: center;
+        margin-bottom: 2rem;
+        padding-bottom: 1rem;
+        border-bottom: 2px solid #f7fafc;
+    }
+    
+    .chat-title {
+        font-size: 1.8rem;
+        font-weight: 600;
+        color: #2d3748;
+        margin-bottom: 0.5rem;
+    }
+    
+    .chat-subtitle {
+        color: #718096;
+        font-size: 1.1rem;
+    }
+    
+    /* Chat Messages */
     .stChatMessage {
-        background-color: white !important;
-        color: #2c3e50 !important;
+        margin: 1rem 0;
+        border-radius: 15px;
+        padding: 1rem;
+        max-width: 85%;
     }
     
-    /* User message styling */
+    /* User messages */
     [data-testid="chat-message-user"] {
-        background-color: #e8f4fd !important;
-        color: #1e3a8a !important;
+        background: linear-gradient(135deg, #3182ce 0%, #2c5aa0 100%);
+        color: white;
+        margin-left: auto;
+        margin-right: 0;
+        border-radius: 20px 20px 5px 20px;
+        box-shadow: 0 3px 10px rgba(49, 130, 206, 0.3);
     }
     
-    /* Assistant message styling */
+    [data-testid="chat-message-user"] .stMarkdown {
+        color: white;
+    }
+    
+    /* Assistant messages */
     [data-testid="chat-message-assistant"] {
-        background-color: #f1f5f9 !important;
-        color: #334155 !important;
+        background: #f7fafc;
+        color: #2d3748;
+        margin-left: 0;
+        margin-right: auto;
+        border: 1px solid #e2e8f0;
+        border-radius: 20px 20px 20px 5px;
+        box-shadow: 0 3px 10px rgba(0,0,0,0.1);
     }
     
-    /* Headers styling */
-    h1, h2, h3 {
-        color: #1e40af !important;
+    [data-testid="chat-message-assistant"] .stMarkdown {
+        color: #2d3748;
     }
     
-    /* All text elements */
-    .stMarkdown, .stText, p, div {
-        color: #2c3e50 !important;
-    }
-    
-    /* Instruction text styling */
-    .instruction-text {
-        color: #4f46e5 !important;
-        font-size: 1.05em;
-        margin-bottom: 20px;
-    }
-    
-    /* Button styling */
-    .stButton > button {
-        background-color: #1e40af !important;
-        color: white !important;
-        border: none !important;
-    }
-    
-    /* Input field styling */
-    .stTextInput > div > div > input, .stChatInput > div > div > input {
-        background-color: white !important;
-        color: #2c3e50 !important;
-        border: 2px solid #e2e8f0 !important;
-    }
-    
-    /* Chat input container */
+    /* Chat Input */
     .stChatInput {
-        background-color: white !important;
+        border-radius: 25px;
+        border: 2px solid #e2e8f0;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
     }
     
-    /* Override any remaining dark elements */
-    .css-1v0mbdj, .css-12oz5g7, .css-184tjsw {
-        background-color: white !important;
-        color: #2c3e50 !important;
+    .stChatInput > div > div > input {
+        border-radius: 25px;
+        border: none;
+        padding: 15px 20px;
+        font-size: 1rem;
+        background: white;
+        color: #2d3748;
+    }
+    
+    /* Sidebar Styling */
+    .css-1d391kg, section[data-testid="stSidebar"] {
+        background: linear-gradient(180deg, #2d3748 0%, #1a202c 100%);
+        color: white;
+    }
+    
+    .css-1d391kg .stMarkdown, section[data-testid="stSidebar"] .stMarkdown {
+        color: white;
+    }
+    
+    section[data-testid="stSidebar"] h1, 
+    section[data-testid="stSidebar"] h2, 
+    section[data-testid="stSidebar"] h3 {
+        color: white;
+    }
+    
+    /* Logo styling */
+    .logo-container {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+    
+    /* Responsive design */
+    @media (max-width: 768px) {
+        .hero-title {
+            font-size: 2.5rem;
+        }
+        
+        .hero-subtitle {
+            font-size: 2rem;
+        }
+        
+        .action-buttons {
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .primary-btn, .secondary-btn {
+            width: 250px;
+        }
+        
+        .chat-container {
+            margin: 1rem;
+            padding: 1rem;
+        }
     }
     </style>
-    <p class="instruction-text">Type your question below about BMW features, services, or common issues, and I'll do my best to provide an answer from my knowledge base.</p>
     """,
     unsafe_allow_html=True
 )
 
+# --- Sidebar ---
+with st.sidebar:
+    st.markdown("### 🔧 About iAssist")
+    st.write("Your BMW Expert Assistant powered by advanced AI and trained on official BMW documentation.")
+    
+    st.markdown("### ✨ Features")
+    st.write("• Instant BMW technical support")
+    st.write("• 24/7 availability")
+    st.write("• Expert-level knowledge base")
+    st.write("• Quick troubleshooting")
+    
+    st.markdown("---")
+    st.write("**Created by Avery Phillips**")
+    
+    if st.button("🔄 Clear Chat History", use_container_width=True):
+        st.session_state.messages = []
+        st.rerun()
 
-# Initialize chat history in session state if it doesn't exist
+# --- Main Content ---
+# Hero Section
+st.markdown(
+    """
+    <div class="hero-section">
+        <div class="logo-container">
+    """,
+    unsafe_allow_html=True
+)
+
+# BMW Logo
+try:
+    col1, col2, col3 = st.columns([1, 1, 1])
+    with col2:
+        st.image("bmw_logo.png", width=120)
+except FileNotFoundError:
+    st.warning("BMW logo not found. Please upload 'bmw_logo.png' for complete branding.")
+
+st.markdown(
+    """
+        </div>
+        <h1 class="hero-title">iAssist: Your BMW Expert,</h1>
+        <h2 class="hero-subtitle">Available 24/7</h2>
+        <p class="hero-description">
+            AI-powered assistant trained by BMW Genius expertise. Get instant 
+            answers to your BMW tech and maintenance questions.
+        </p>
+        <div class="action-buttons">
+            <button class="primary-btn" onclick="document.querySelector('.stChatInput input').focus()">
+                Try iAssist Now
+            </button>
+            <a href="#demo" class="secondary-btn">Watch Demo</a>
+        </div>
+    </div>
+    """,
+    unsafe_allow_html=True
+)
+
+# Chat Interface
+st.markdown(
+    """
+    <div class="chat-container">
+        <div class="chat-header">
+            <h3 class="chat-title">Start Your Conversation</h3>
+            <p class="chat-subtitle">Ask me anything about BMW vehicles, features, or maintenance</p>
+        </div>
+    """,
+    unsafe_allow_html=True
+)
+
+# Initialize chat history
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
-# Display chat messages from history on app rerun
+# Display chat messages
 for message in st.session_state.messages:
     with st.chat_message(message["role"]):
         st.markdown(message["content"])
 
-# Accept user input via chat_input
-if prompt := st.chat_input("Ask a question about BMW..."):
+# Chat input
+if prompt := st.chat_input("Ask about BMW features, maintenance, or troubleshooting..."):
     # Add user message to chat history
     st.session_state.messages.append({"role": "user", "content": prompt})
-    # Display user message in chat message container
+    
+    # Display user message
     with st.chat_message("user"):
         st.markdown(prompt)
 
-    # Get AI response
+    # Generate AI response
     with st.chat_message("assistant"):
-        with st.spinner("Thinking..."):
+        with st.spinner("🤔 Thinking..."):
             try:
-                # Prepare the messages for the OpenAI API call
-                # Include the system prompt first, then the full chat history for context
                 messages_for_api = [
                     {"role": "system", "content": system_prompt_template.format(context=faq_context)}
-                ] + st.session_state.messages # Append previous chat turns for context
+                ] + st.session_state.messages
 
                 response = openai.chat.completions.create(
-                    model="gpt-4o",  # Recommended for latest model access. Or "gpt-4", "gpt-3.5-turbo" if preferred.
-                    messages=messages_for_api, # Use the full message history
-                    max_tokens=500,  # Limit response length
-                    temperature=0.2  # Lower temperature for more factual/less creative responses
+                    model="gpt-4o",
+                    messages=messages_for_api,
+                    max_tokens=500,
+                    temperature=0.2
                 )
+                
                 ai_response = response.choices[0].message.content
-                st.markdown(ai_response) # Use st.markdown for AI's response
-
+                st.markdown(ai_response)
+                
                 # Add assistant response to chat history
                 st.session_state.messages.append({"role": "assistant", "content": ai_response})
 
             except openai.APIError as e:
-                st.error(f"An OpenAI API error occurred: {e}. Please check your API key, model access, or network.")
-                st.session_state.messages.append({"role": "assistant", "content": f"Error: {e}"}) # Add error to history
+                st.error(f"An OpenAI API error occurred: {e}")
+                st.session_state.messages.append({"role": "assistant", "content": f"Error: {e}"})
             except Exception as e:
                 st.error(f"An unexpected error occurred: {e}")
-                st.session_state.messages.append({"role": "assistant", "content": f"Error: {e}"}) # Add error to history
+                st.session_state.messages.append({"role": "assistant", "content": f"Error: {e}"})
 
-# --- Optional: Display Raw FAQs for debugging/reference ---
-# with st.expander("View Loaded FAQs"):
-#     st.json(faqs_data)
+st.markdown("</div>", unsafe_allow_html=True)
+
+# Footer
+st.markdown(
+    """
+    <div style="text-align: center; margin-top: 3rem; padding: 2rem; color: #718096;">
+        <p>💡 <strong>Tip:</strong> For best results, be specific about your BMW model and year when asking questions.</p>
+        <hr style="margin: 2rem 0; border: none; height: 1px; background: #e2e8f0;">
+        <p><em>iAssist - Independent Demo for Evaluation • Not an Official BMW Product</em></p>
+    </div>
+    """,
+    unsafe_allow_html=True
+)
+
