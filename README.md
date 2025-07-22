@@ -4,6 +4,15 @@ iAssist is an AI-powered virtual BMW Product Specialist and Genius, designed to 
 
 This project demonstrates how to build an intelligent chatbot using Streamlit for the user interface and OpenAI's GPT-4o for natural language understanding and generation, augmented with a custom knowledge base (FAQs).
 
+## Screenshots
+
+**iAssist Welcome Screen**
+![iAssist Welcome Screen](./images/iassist_welcome.png)
+
+**Chatbot Interaction (Question & Answer)**
+![iAssist Q&A Interaction](./images/iassist_q_a.png)
+
+
 ## Features
 
 * **Expert Knowledge Base:** Trained on specific BMW feature details and common service advisor FAQs. **(Note: The current knowledge base contains a limited set of approximately 10 FAQs for demonstration purposes.)**
